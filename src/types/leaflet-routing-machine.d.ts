@@ -1,46 +1,44 @@
-declare module 'leaflet-routing-machine' {
-    import * as L from 'leaflet';
-  
-    namespace Routing {
-      interface RoutingControlOptions {
-        waypoints: L.LatLng[];
-        router?: any;
-        routeWhileDragging?: boolean;
-        showAlternatives?: boolean;
-        addWaypoints?: boolean;
-        draggableWaypoints?: boolean;
-        fitSelectedRoutes?: boolean;
-        lineOptions?: {
-          styles?: {
-            color: string;
-            opacity: number;
-            weight: number;
-          }[];
-        };
-        createMarker?: (i: number, waypoint: any, n: number) => L.Marker | null;
-      }
-  
-      interface Control extends L.Control {
-        new(options: RoutingControlOptions): Control;
-        setWaypoints(waypoints: L.LatLng[]): this;
-      }
-  
-      interface OSRMv1Options {
-        serviceUrl: string;
-        profile?: string;
-      }
-  
-      interface ControlStatic {
-        (options: RoutingControlOptions): Control;
-      }
-  
-      interface OSRMv1Static {
-        (options: OSRMv1Options): any;
-      }
-  
-      const control: ControlStatic;
-      const osrmv1: OSRMv1Static;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+declare module 'leaflet' {
+  namespace Routing {
+    interface RoutingControlOptions {
+      waypoints: L.LatLng[];
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      router?: any;
+      routeWhileDragging?: boolean;
+      showAlternatives?: boolean;
+      addWaypoints?: boolean;
+      draggableWaypoints?: boolean;
+      fitSelectedRoutes?: boolean;
+      lineOptions?: {
+        styles?: {
+          color: string;
+          opacity: number;
+          weight: number;
+        }[];
+      };
+      createMarker?: (i: number, waypoint: any, n: number) => L.Marker | null;
     }
-  
-    export = Routing;
+
+    class Control extends L.Control {
+      constructor(options: RoutingControlOptions);
+      setWaypoints(waypoints: L.LatLng[]): this;
+    }
+
+    interface OSRMv1Options {
+      serviceUrl: string;
+      profile?: string;
+    }
+
+    function control(options: RoutingControlOptions): Control;
+    function osrmv1(options: OSRMv1Options): any;
   }
+
+    export function latLng(lat: any, lng: any): L.LatLng {
+        throw new Error('Function not implemented.');
+    }
+}
+
+declare module 'leaflet-routing-machine' {
+  export = L.Routing;
+}
