@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, latLng } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { supabase } from '../lib/supabase';
 import { Camera, Navigation, MapPin } from 'lucide-react';
-import L, { LatLng } from 'leaflet';
+import L from 'leaflet';
 import { LocationMarker } from './LocationMarker';
 import { NavigationPath } from './NavigationPath';
 import { MapClickHandler } from './MapClickHandler';
+
 
 // Fix Leaflet default marker icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -51,7 +52,7 @@ export function Map() {
     }
   };
 
-  const handleLocationSelect = (location: LatLng) => {
+  const handleLocationSelect = (location: latLng) => {
     if (selectionMode) {
       setSelectedLocation(location);
       setSelectionMode(false);
@@ -65,7 +66,7 @@ export function Map() {
       if (!user) return;
 
       const locationToSave = selectedLocation || currentLocation;
-      
+
       if (!locationToSave) {
         alert('Please select a location or wait for your current location to be detected');
         return;
@@ -89,7 +90,7 @@ export function Map() {
           const { data: { publicUrl } } = supabase.storage
             .from('parking-photos')
             .getPublicUrl(fileName);
-          
+
           location.photo_url = publicUrl;
         }
       }
@@ -127,13 +128,13 @@ export function Map() {
           />
           <LocationMarker onLocationUpdate={handleLocationUpdate} />
           <MapClickHandler onLocationSelect={handleLocationSelect} />
-          
+
           {selectedLocation && (
             <Marker position={selectedLocation}>
               <Popup>Selected parking location</Popup>
             </Marker>
           )}
-          
+
           {parkedLocation && (
             <>
               <Marker position={[parkedLocation.latitude, parkedLocation.longitude]}>
@@ -144,18 +145,18 @@ export function Map() {
                       <p className="text-gray-600 mt-1">{parkedLocation.description}</p>
                     )}
                     {parkedLocation.photo_url && (
-                      <img 
-                        src={parkedLocation.photo_url} 
-                        alt="Parking location" 
+                      <img
+                        src={parkedLocation.photo_url}
+                        alt="Parking location"
                         className="w-full h-32 object-cover mt-2 rounded"
                       />
                     )}
                   </div>
                 </Popup>
               </Marker>
-              <NavigationPath 
-                currentLocation={currentLocation} 
-                parkedLocation={[parkedLocation.latitude, parkedLocation.longitude]} 
+              <NavigationPath
+                currentLocation={currentLocation}
+                parkedLocation={[parkedLocation.latitude, parkedLocation.longitude]}
               />
             </>
           )}
